@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface V_color_list : UIView
+@property (nonatomic, assign) BOOL              runAnimation;
+@property (nonatomic, assign) NSInteger         pixelsize;
+@property (nonatomic, assign) NSTimeInterval    duration;
 
 + (id)view;
 

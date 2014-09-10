@@ -8,165 +8,58 @@
 
 #import "V_color_list.h"
 
-#define PixelCount  255
-#define NumCount    (255 * 2 * 2 * 2)
-
 @implementation V_color_list
 
 + (id)view
 {
     V_color_list *obj = [[V_color_list alloc] init];
-    obj.frame = CGRectMake(0, 0, 320, NumCount);
     return obj;
 }
 
 - (void)drawRect:(CGRect)rect
 {
+    if (!_pixelsize) {
+        _pixelsize = 1;
+    }
+    
+    if (!_duration) {
+        _duration = 1.f;
+    }
+    
     CGContextRef contxt = UIGraphicsGetCurrentContext();
     
-    CGFloat top = 0;
+    for (int x = 0; x <= self.frame.size.width; x+=_pixelsize) {
+        for (int y = 0; y <= self.frame.size.height; y+=_pixelsize) {
+            
+//            NSInteger index = arc4random() % 2048;
+//            UIColor *rgb = [self colorWithValue:index];
+
+            NSInteger r = arc4random() % 256;
+            NSInteger g = arc4random() % 256;
+            NSInteger b = arc4random() % 256;
+            UIColor *rgb = [UIColor colorWithRed:(CGFloat)r / 255.f
+                                           green:(CGFloat)g / 255.f
+                                            blue:(CGFloat)b / 255.f
+                                           alpha:1.f];
+            
+            CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
+            CGContextSetFillColorWithColor(contxt, rgb.CGColor);
+            CGContextFillRect(contxt, CGRectMake(x, y, _pixelsize, _pixelsize));
+        }
+    }
     
-    for (CGFloat f = 0; f < 2048; f++) {
-        
-        NSInteger index = arc4random() % 2048;
-        
-        UIColor *rgb = [self colorWithValue:f];
-        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-        
-        top += 1;
+    if (_runAnimation) {
+        [self performSelector:@selector(setNeedsDisplay) withObject:nil afterDelay:_duration];
     }
 }
 
-//- (void)drawRect:(CGRect)rect
-//{
-//    // Drawing code
-//    CGContextRef contxt = UIGraphicsGetCurrentContext();
-//    
-//    CGFloat r, g, b;
-//    CGFloat top = 0;
-//    
-//    //000
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = f;
-//        g = f;
-//        b = f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //001
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = f;
-//        g = f;
-//        b = 255 - f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //010
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = f;
-//        g = 255 - f;
-//        b = f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //011
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = f;
-//        g = 255 - f;
-//        b = 255 - f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //100
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = 255 - f;
-//        g = f;
-//        b = f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //101
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = 255 - f;
-//        g = f;
-//        b = 255 - f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //110
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = 255 - f;
-//        g = 255 - f;
-//        b = f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//    
-//    //111
-//    for (CGFloat f = 0; f <= 255; f++) {
-//        
-//        r = 255 - f;
-//        g = 255 - f;
-//        b = 255 - f;
-//        
-//        UIColor *rgb = [UIColor colorWithRed:r / 255.f green:g / 255.f blue:b / 255.f alpha:1.f];
-//        CGContextSetStrokeColorWithColor(contxt, rgb.CGColor);
-//        CGContextSetFillColorWithColor(contxt, rgb.CGColor);
-//        CGContextFillRect(contxt, CGRectMake(0, top, 320, 1));
-//        
-//        top += 1;
-//    }
-//}
+- (void)setRunAnimation:(BOOL)runAnimation
+{
+    _runAnimation = runAnimation;
+    if (runAnimation) {
+        [self setNeedsDisplay];
+    }
+}
 
 //value between 0 - 2047
 - (UIColor *)colorWithValue:(NSInteger)value

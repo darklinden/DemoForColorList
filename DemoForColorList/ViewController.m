@@ -10,7 +10,9 @@
 #import "V_color_list.h"
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet UIScrollView *pV_scroll;
+
+@property (strong, nonatomic) UIPanGestureRecognizer *pan;
+@property (strong, nonatomic) UIPinchGestureRecognizer *pinch;
 
 @end
 
@@ -29,16 +31,62 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    V_color_list *v = [V_color_list view];
-    [self.pV_scroll addSubview:v];
-    self.pV_scroll.contentSize = v.frame.size;
+    
+    _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAct:)];
+    _pan.minimumNumberOfTouches = 1;
+    _pan.maximumNumberOfTouches = 1;
+    [self.view addGestureRecognizer:_pan];
+    
+    _pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchAct:)];
+    [self.view addGestureRecognizer:_pinch];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)panAct:(id)sender
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    UIPanGestureRecognizer *regnizer = (UIPanGestureRecognizer *)sender;
+    CGPoint move = [regnizer translationInView:self.view.window];
+    V_color_list *pV_color_list = (V_color_list*)self.view;
+    NSTimeInterval duration = pV_color_list.duration;
+    duration += move.y / 100;
+    
+    if (duration > 1.f) {
+        duration = 1.f;
+    }
+    
+    if (duration < 0.01f) {
+        duration = 0.01f;
+    }
+    
+    pV_color_list.duration = duration;
+    
+    [regnizer setTranslation:CGPointZero inView:self.view.window];
+}
+
+- (void)pinchAct:(id)sender
+{
+    UIPinchGestureRecognizer *regnizer = (UIPinchGestureRecognizer *)sender;
+    CGFloat scale = regnizer.scale;
+    V_color_list *pV_color_list = (V_color_list*)self.view;
+    NSInteger pix = pV_color_list.pixelsize;
+    
+    if (scale > 1) {
+        pix++;
+    }
+    else {
+        pix--;
+    }
+    
+    if (pix <= 0) {
+        pix = 1;
+    }
+    
+    pV_color_list.pixelsize = pix;
+}
+
+- (IBAction)switchValueChanged:(id)sender
+{
+    V_color_list *pV_color_list = (V_color_list*)self.view;
+    pV_color_list.runAnimation = ![(UISegmentedControl *)sender selectedSegmentIndex];
 }
 
 @end
