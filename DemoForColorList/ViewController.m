@@ -60,6 +60,7 @@
     pV_color_list.duration = duration;
     
     [regnizer setTranslation:CGPointZero inView:self.view.window];
+    [pV_color_list setNeedsDisplay];
 }
 
 - (void)pinchAct:(id)sender
@@ -81,6 +82,8 @@
     }
     
     pV_color_list.pixelsize = pix;
+    
+    [pV_color_list setNeedsDisplay];
 }
 
 - (IBAction)switchValueChanged:(id)sender
